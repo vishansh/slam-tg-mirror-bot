@@ -244,13 +244,13 @@ class MirrorListener(listeners.MirrorListeners):
                 update_all_messages()
             return
         with download_dict_lock:
-            msg = f'<b>Filename: </b><code>{download_dict[self.uid].name()}</code>\n<b>Size: </b><code>{size}</code>'
+            msg = f'<b>📂 Filename: </b><code>{download_dict[self.uid].name()}</code>\n<b>💾 Size: </b><code>{size}</code>'
             if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
-                msg += '\n<b>Type: </b><code>Folder</code>'
+                msg += '\n\n<b>Type: </b><code>Folder</code>'
                 msg += f'\n<b>SubFolders: </b><code>{folders}</code>'
                 msg += f'\n<b>Files: </b><code>{files}</code>'
             else:
-                msg += f'\n<b>Type: </b><code>{typ}</code>'
+                msg += f'\n\n<b>Type: </b><code>{typ}</code>'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = short_url(link)
@@ -291,13 +291,16 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f'\n\ncc: {uname}'
+                msg += f'\n\n🗣️ CC: {uname}'
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
                 pass
             del download_dict[self.uid]
             count = len(download_dict)
+            msg += f'\n\n <b>⚠️ Dont Share any links to Channels/ Groups/ Public..</b>'
+            msg += f'\n 🗃️ <i>For accessing G-Drive Links Join our Google Group:</i>'
+            msg += f'\n\n#Uploaded Successfully ✅ Join @AnshCloud'
         sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
         if count == 0:
             self.clean()
